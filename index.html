@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>آب و هوای شهرها</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 </head>
 <body>
   <h1>آب و هوای شهرها</h1>
-  
+
   <select id="citySelect">
     <option value="Tehran">تهران</option>
     <option value="Isfahan">اصفهان</option>
     <option value="Mashhad">مشهد</option>
     <option value="Shiraz">شیراز</option>
     <option value="Tabriz">تبریز</option>
+    <option value="Babol">بابل</option>
+    <option value="Babolsar">بابلسر</option>
+    <option value="Sari">ساری</option>
+    <option value="Behshahr">بهشهر</option>
+    <option value="Gorgan">گرگان</option>
   </select>
 
   <div id="loading">در حال بارگیری...</div>
@@ -82,8 +87,10 @@
         });
     }
 
+    // بارگذاری اولیه آب و هوای تهران
     loadWeather('Tehran');
 
+    // وقتی کاربر شهر جدیدی را انتخاب کرد
     document.getElementById('citySelect').addEventListener('change', (event) => {
       loadWeather(event.target.value);
     });
