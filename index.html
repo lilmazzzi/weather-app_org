@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>آب و هوای شهرها</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+  <h1>آب و هوای شهرها</h1>
+  
+  <select id="citySelect">
+    <option value="Tehran">تهران</option>
+    <option value="Isfahan">اصفهان</option>
+    <option value="Mashhad">مشهد</option>
+    <option value="Shiraz">شیراز</option>
+    <option value="Tabriz">تبریز</option>
+  </select>
+
+  <div id="loading">در حال بارگیری...</div>
+  <div id="weather" class="hidden"></div>
+
+  <footer>
+    ساخته شده توسط مازیار
+  </footer>
+
+  <script>
+    const apiKey = 'cad96913b5680430a0da2fc24ae2091d';
+
+    function getWeatherIcon(desc) {
+      if (desc.includes('باران')) return '<i class="fas fa-cloud-showers-heavy"></i>';
+      if (desc.includes('ابر')) return '<i class="fas fa-cloud"></i>';
+      if (desc.includes('صاف')) return '<i class="fas fa-sun"></i>';
+      if (desc.includes('برف')) return '<i class="fas fa-snowflake"></i>';
+      return '<i class="fas fa-smog"></i>';
+    }
+
+    function updateBackground(temp) {
+      if (temp > 25) {
+        document.body.style.background = "#4a148c"; // گرم: بنفش تیره
+      } else if (temp < 10) {
+        document.body.style.background = "#0d47a1"; // سرد: آبی تیره
+      } else {
+        document.body.style.background = "#1a1a1a"; // نرمال: مشکی ملایم
+      }
+    }
+
+    function loadWeather(city) {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('weather').classList.add('hidden');
+
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=fa`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('کد پاسخ: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(data => {
+          const icon = getWeatherIcon(data.weather[0].description);
+
+          document.getElementById('weather').innerHTML = `
+            <h2>${data.name}</h2>
+            <p>${icon} ${data.weather[0].description}</p>
+            <p>🌡 دما: ${data.main.temp} درجه سانتی‌گراد</p>
+            <p>💧 رطوبت: ${data.main.humidity}%</p>
+            <p>💨 سرعت باد: ${data.wind.speed} متر بر ثانیه</p>
+          `;
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('weather').classList.remove('hidden');
+          document.getElementById('weather').classList.add('loaded');
+
+          updateBackground(data.main.temp);
+        })
+        .catch(error => {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('weather').classList.remove('hidden');
+          document.getElementById('weather').innerText = '❌ خطا: ' + error.message;
+          console.error('خطا:', error);
+        });
+    }
+
+    loadWeather('Tehran');
+
+    document.getElementById('citySelect').addEventListener('change', (event) => {
+      loadWeather(event.target.value);
+    });
+  </script>
+</body>
+</html>
